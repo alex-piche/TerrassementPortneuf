@@ -36,10 +36,8 @@
 				<div class="large-12 columns text-center">
 					<div class="callout panel ombre">
 						<h1>Réalisations</h1>
-						<table id="Galerie">
 						
-							<?php
-								$k = 0;				
+							<?php			
 								
 								function glob_recursive($pattern, $flags = 0)
 								{
@@ -51,35 +49,62 @@
 									return $files;
 								}	
 								
-								$files = glob_recursive("thumbs/*.jpg");
-								
-								$nbPhoto = count($files);
-								
-								for($i = 0; $i < $nbPhoto/3; $i++)
-								{
-									echo "<tr>";
+								$dirs = array_filter(glob('thumbs/*'), 'is_dir');
 
-									for($j = 0; $j < 3; $j++)
+								foreach ($dirs as $dir)
+								{	
+									$k = 0;	
+								
+									$files = glob_recursive($dir . "/*.jpg");
+									
+									$nbPhoto = count($files);
+									
+									$nom = explode("/",$dir);
+									$nom = $nom[1];
+									$id = str_replace(' ', '', $nom);
+									
+									echo "<dl class=\"accordion\" data-accordion>";
+									echo "<dd class=\"accordion-navigation\">";
+									
+									echo "<a href=\"#" . $id . "\"><h1>" . $nom . "</h1></a>";
+									
+									echo "<div id=\"" . $id ."\" class=\"content\">";
+									
+									echo "<table>";
+									
+									for($i = 0; $i < $nbPhoto/3; $i++)
 									{
-										if($k < $nbPhoto)
+										echo "<tr>";
+
+										for($j = 0; $j < 3; $j++)
 										{
-											echo "<td>";
+											if($k < $nbPhoto)
+											{
+												echo "<td>";
 
-											echo "<a href=\"", utf8_encode(str_replace("thumbs", "photo", $files[$k])), "\"><img src=\"", utf8_encode($files[$k]), "\" class=\"imgGalerie ombre\"/></a>";
+												echo "<a href=\"", utf8_encode(str_replace("thumbs", "photo", $files[$k])), "\"><img src=\"", utf8_encode($files[$k]), "\" class=\"imgGalerie ombre\"/></a>";
 
-											echo "</td>";
-											
-											$k++;
-										}								
+												echo "</td>";
+												
+												$k++;
+											}								
+										}
+										
+										echo "</tr>";
 									}
 									
-									echo "</tr>";
-								}
-								
+									echo "</table>";
+									
+									echo "</div>";
+									
+									echo "</dd>";
+									echo "</dl>";
+									
+									echo "<br/>";
+								}						
 								
 							?>
 							
-						</table>
 					</div>	
 				</div>
 			</div>	
